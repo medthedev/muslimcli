@@ -80,3 +80,20 @@ pub fn set_config(city: String, country: String) -> io::Result<()> {
 
     Ok(())
 }
+
+pub fn get_config_data(option: String) -> io::Result<String> {
+    let config_path = get_config_path()?;
+
+    let config = fs::read_to_string(&config_path)?
+        .parse::<DocumentMut>()
+        .map_err(|e| io::Error::new(io::ErrorKind::InvalidData, e))?;
+
+    let data = config["info"][&option]
+        .as_str()
+        .ok_or_else(|| io::Error::new(
+            io::ErrorKind::NotFound,
+            format!("Config option '{}' not found", option)
+        ))?;
+
+    Ok(data.to_string())
+}
