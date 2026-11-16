@@ -44,3 +44,19 @@ pub fn reset_config() -> io::Result<()> {
 
     Ok(())
 }
+
+
+pub fn set_config(city: String, country: String) -> io::Result<()> {
+    let config_path = get_config_path()?;
+
+    let mut config = DocumentMut::new();
+
+    config["info"]["city"] = value(city);
+    config["info"]["country"] = value(country);
+
+    fs::write(&config_path, config.to_string())?;
+
+    println!("Config updated successfully.");
+
+    Ok(())
+}
