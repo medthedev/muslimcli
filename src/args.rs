@@ -1,4 +1,6 @@
+use crate::{api, config::set_config};
 use clap::Parser;
+use std::io;
 
 #[derive(Parser)]
 struct Cli {
@@ -10,20 +12,32 @@ enum Action {
     List,
     Help,
     Version,
+    Setup,
 }
 
-pub fn check_args() {
+pub async fn check_args() -> Result<(), Box<dyn std::error::Error>> {
     let args = Cli::parse();
 
     match args.action {
-        Action::List => list(),
+        Action::List => list().await?,
         Action::Help => help(),
         Action::Version => version(),
+        Action::Setup => setup(),
     }
+
+    Ok(())
 }
 
-fn list() {
-    println!("( aka 'payers' )");
+async fn list() -> Result<(), Box<dyn std::error::Error>> {
+    let times = api::get_data().await?;
+
+    println!("Fajr: {}", times.fajr);
+    println!("Dhuhr: {}", times.dhuhr);
+    println!("Asr: {}", times.asr);
+    println!("Maghrib: {}", times.maghrib);
+    println!("Isha: {}", times.isha);
+
+    Ok(())
 }
 
 fn help() {
@@ -32,4 +46,21 @@ fn help() {
 
 fn version() {
     println!("muslimcli v0.1.0");
+}
+
+fn setup() {
+    let mut city = String::new();
+    let mut country = String::new();
+    
+    println!("What is your city name?");
+    io::stdin()
+        .read_line(&mut city)
+        .expect("Failed to read input");
+
+    println!("What is your country name?");
+    io::stdin()
+        .read_line(&mut country)
+        .expect("Failed to read input");
+
+    set_config(city, country);
 }
