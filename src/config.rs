@@ -64,8 +64,15 @@ pub fn set_config(city: String, country: String) -> io::Result<()> {
         config["info"] = Item::Table(Table::new());
     }
 
-    config["info"]["city"] = value(city);
-    config["info"]["country"] = value(country);
+    config["info"]["city"] = Item::Value(
+        toml_edit::Value::from(city.trim())
+            .decorated(" ", "")
+    );
+    
+    config["info"]["country"] = Item::Value(
+        toml_edit::Value::from(country.trim())
+            .decorated(" ", "")
+    );
 
     fs::write(&config_path, config.to_string())?;
 
