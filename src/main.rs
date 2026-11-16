@@ -1,6 +1,7 @@
+mod args;
 mod config;
 
 fn main() {
     config::create_config();
-    println!("Hello, world!");
+    args::check_args();
 }
