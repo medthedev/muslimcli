@@ -6,3 +6,7 @@ edition = "2024"
 [dependencies]
 clap = { version = "4.0", features = ["derive"] }
 directories = "6.0.0"
+reqwest = { version = "0.13", features = ["json"] }
+tokio = { version = "1", features = ["full"] }
+serde = { version = "1", features = ["derive"] }
+toml_edit = "0.25.19"
