@@ -1,25 +1,46 @@
 use directories::ProjectDirs;
-use std::fs;
-use std::fs::File;
+use std::{fs, io, path::PathBuf};
+use toml_edit::{DocumentMut, value};
 
-pub fn create_config() {
-    if let Some(proj_dirs) = ProjectDirs::from("org", "medthedev", "muslimcli") {
-        let config_dir = proj_dirs.config_dir();
+fn get_config_path() -> io::Result<PathBuf> {
+    let project_dirs = ProjectDirs::from("org", "medthedev", "muslimcli")
+        .ok_or_else(|| io::Error::other("Could not determine config directory"))?;
 
-        fs::create_dir_all(config_dir)
-            .expect("Could not create config directory");
+    let config_dir = project_dirs.config_dir();
 
-        let config_path = config_dir.join("config.toml");
+    fs::create_dir_all(config_dir)?;
 
-        if !config_path.exists() {
-            File::create(config_path)
-                .expect("Could not create config file");
+    Ok(config_dir.join("config.toml"))
+}
 
-            println!("Config file created successfully.");
-        } else {
-            println!("Config file already exists.");
-        }
+fn default_config() -> String {
+    let mut config = DocumentMut::new();
+
+    config["info"]["city"] = value("unset");
+    config["info"]["country"] = value("unset");
+
+    config.to_string()
+}
+
+pub fn create_config() -> io::Result<()> {
+    let config_path = get_config_path()?;
+
+    if !config_path.exists() {
+        fs::write(&config_path, default_config())?;
+        println!("Config file created successfully.");
     } else {
-        println!("Could not determine config directory.");
+        println!("Config file already exists.");
     }
+
+    Ok(())
+}
+
+pub fn reset_config() -> io::Result<()> {
+    let config_path = get_config_path()?;
+
+    fs::write(&config_path, default_config())?;
+
+    println!("Config reset successfully.");
+
+    Ok(())
 }
