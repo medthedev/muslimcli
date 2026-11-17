@@ -1,4 +1,7 @@
-use crate::{api, config::set_config};
+use crate::{
+    api,
+    config::{reset_config, set_config},
+};
 use clap::Parser;
 use std::io;
 
@@ -13,6 +16,7 @@ enum Action {
     Help,
     Version,
     Setup,
+    Reset,
 }
 
 pub async fn check_args() -> Result<(), Box<dyn std::error::Error>> {
@@ -23,6 +27,7 @@ pub async fn check_args() -> Result<(), Box<dyn std::error::Error>> {
         Action::Help => help(),
         Action::Version => version(),
         Action::Setup => setup(),
+        Action::Reset => reset()?,
     }
 
     Ok(())
@@ -51,7 +56,7 @@ fn version() {
 fn setup() {
     let mut city = String::new();
     let mut country = String::new();
-    
+
     println!("What is your city name?");
     io::stdin()
         .read_line(&mut city)
@@ -63,4 +68,8 @@ fn setup() {
         .expect("Failed to read input");
 
     set_config(city, country);
+}
+
+fn reset() -> io::Result<()> {
+    reset_config()
 }
