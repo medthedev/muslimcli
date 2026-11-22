@@ -5,18 +5,23 @@ use crate::{
 use clap::Parser;
 use std::io;
 
+/// A small CLI for prayer times and duas.
 #[derive(Parser)]
+#[command(version, about)]
 struct Cli {
+    /// Action to perform
     action: Action,
 }
 
 #[derive(Clone, clap::ValueEnum)]
 enum Action {
+    /// Show today's prayer times
     List,
-    Help,
-    Version,
+    /// Set your city and country in the config
     Setup,
+    /// Reset the config to its defaults
     Reset,
+    /// Show a random dua
     Dua,
 }
 
@@ -25,8 +30,6 @@ pub async fn check_args() -> Result<(), Box<dyn std::error::Error>> {
 
     match args.action {
         Action::List => list().await?,
-        Action::Help => help(),
-        Action::Version => version(),
         Action::Setup => setup()?,
         Action::Reset => reset()?,
         Action::Dua => dua().await?,
@@ -53,14 +56,6 @@ async fn dua() -> Result<(), Box<dyn std::error::Error>> {
     println!("{}", dua);
 
     Ok(())
-}
-
-fn help() {
-    println!("Available actions: search, help, version");
-}
-
-fn version() {
-    println!("muslimcli v0.1.0");
 }
 
 fn setup() -> io::Result<()> {
