@@ -63,7 +63,7 @@ fn version() {
     println!("muslimcli v0.1.0");
 }
 
-fn setup() {
+fn setup() -> io::Result<()> {
     let mut city = String::new();
     let mut country = String::new();
 
@@ -77,7 +77,7 @@ fn setup() {
         .read_line(&mut country)
         .expect("Failed to read input");
 
-    set_config(city, country);
+    set_config(city, country)
 }
 
 fn reset() -> io::Result<()> {
