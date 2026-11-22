@@ -38,6 +38,30 @@ cargo install --path .
 
 ## Usage
 
+```console
+$ muslimcli --help
+A small CLI for prayer times and duas
+
+Usage: muslimcli <ACTION>
+
+Arguments:
+  <ACTION>
+          Action to perform
+
+          Possible values:
+          - list:  Show today's prayer times
+          - setup: Set your city and country in the config
+          - reset: Reset the config to its defaults
+          - dua:   Show a random dua
+
+Options:
+  -h, --help
+          Print help (see a summary with '-h')
+
+  -V, --version
+          Print version
+```
+
 Set your location once:
 
 ```console
@@ -67,14 +91,15 @@ $ muslimcli dua
 اللهم اجعل القرآن ربيع قلبي
 ```
 
-| Action    | Description                                                    |
-| --------- | -------------------------------------------------------------- |
-| `list`    | Fetch and print the five daily prayer times for your city.     |
-| `dua`     | Fetch and print a random dua in Arabic.                        |
-| `setup`   | Prompt for your city and country and save them to the config.  |
-| `reset`   | Restore the config to its default (`unset`) values.            |
-| `version` | Print the CLI version.                                         |
-| `help`    | Print a short action list; `muslimcli --help` shows full usage. |
+| Action  | Description                                                   |
+| ------- | ------------------------------------------------------------- |
+| `list`  | Fetch and print the five daily prayer times for your city.    |
+| `dua`   | Fetch and print a random dua in Arabic.                       |
+| `setup` | Prompt for your city and country and save them to the config. |
+| `reset` | Restore the config to its default (`unset`) values.           |
+
+Use `--help` for full usage information and `--version` to print the CLI version
+(`-h` and `-V` are short aliases).
 
 > `list` reads your city and country from the config, so run `setup` first.
 
@@ -83,11 +108,11 @@ $ muslimcli dua
 Settings live in a `config.toml` file in your platform's config directory, resolved
 with the [`directories`](https://crates.io/crates/directories) crate:
 
-| Platform | Location                                                 |
-| -------- | -------------------------------------------------------- |
-| Linux    | `~/.config/muslimcli/config.toml`                        |
-| macOS    | `~/Library/Application Support/muslimcli/config.toml`    |
-| Windows  | `%APPDATA%\medthedev\muslimcli\config\config.toml`       |
+| Platform | Location                                              |
+| -------- | ----------------------------------------------------- |
+| Linux    | `~/.config/muslimcli/config.toml`                     |
+| macOS    | `~/Library/Application Support/muslimcli/config.toml` |
+| Windows  | `%APPDATA%\medthedev\muslimcli\config\config.toml`    |
 
 The file is written when you run `setup` (or `reset`) and looks like this:
 
