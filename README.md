@@ -1,19 +1,23 @@
 # muslimcli
 
-A command line utility that has various islamic tools in the terminal to help you get closer to Allah.
+A small command-line companion that keeps a few Islamic utilities a keystroke away:
+prayer times for your city and a random dua, right in the terminal.
 
-> **Status:** early development. The CLI still not mature enough
+> **Status:** early development — expect rough edges and breaking changes.
 
 ## Features
 
-- **Prayer times** — fetch today's Fajr, Dhuhr, Asr, Maghrib and Isha times for your city from the
-  [AlAdhan API](https://aladhan.com/prayer-times-api).
-- **Setup** — store your city and country in a local config file so you don't re-enter them.
+- **Prayer times** — print Fajr, Dhuhr, Asr, Maghrib and Isha for your configured city
+  using the [AlAdhan prayer times API](https://aladhan.com/prayer-times-api).
+- **Random dua** — print a randomly chosen dua in Arabic from the
+  [Ummah API](https://ummahapi.com/).
+- **Local configuration** — set your city and country once with `setup`, or clear them
+  with `reset`. No accounts or API keys required.
 
 ## Requirements
 
-- Rust 1.85+ (edition 2024)
-- An internet connection to fetch prayer times
+- Rust 1.85 or newer (the project uses edition 2024)
+- An internet connection for `list` and `dua`
 
 ## Installation
 
@@ -25,7 +29,8 @@ cd muslimcli
 cargo build --release
 ```
 
-The binary is at `target/release/muslimcli`. To install it on your `PATH`:
+The binary is written to `target/release/muslimcli`. To install it into your Cargo
+bin directory instead:
 
 ```sh
 cargo install --path .
@@ -33,49 +38,67 @@ cargo install --path .
 
 ## Usage
 
-Run `setup` once and enter your city and country:
+Set your location once:
 
-```sh
-muslimcli setup
-# What is your city name?
-# Algiers
-# What is your country name?
-# Algeria
+```console
+$ muslimcli setup
+What is your city name?
+Algiers
+What is your country name?
+Algeria
+Config updated successfully.
 ```
 
-Then display the prayer times:
+Then print the prayer times:
 
-```sh
-muslimcli list
-# Fajr: 05:52
-# Dhuhr: 12:31
-# Asr: 15:24
-# Maghrib: 17:53
-# Isha: 19:11
+```console
+$ muslimcli list
+Fajr: 05:52
+Dhuhr: 12:31
+Asr: 15:24
+Maghrib: 17:53
+Isha: 19:11
 ```
 
-Other actions:
+Or fetch a random dua:
 
-```sh
-muslimcli help      # list available actions
-muslimcli version   # print the version
+```console
+$ muslimcli dua
+اللهم اجعل القرآن ربيع قلبي
 ```
+
+| Action    | Description                                                    |
+| --------- | -------------------------------------------------------------- |
+| `list`    | Fetch and print the five daily prayer times for your city.     |
+| `dua`     | Fetch and print a random dua in Arabic.                        |
+| `setup`   | Prompt for your city and country and save them to the config.  |
+| `reset`   | Restore the config to its default (`unset`) values.            |
+| `version` | Print the CLI version.                                         |
+| `help`    | Print a short action list; `muslimcli --help` shows full usage. |
+
+> `list` reads your city and country from the config, so run `setup` first.
 
 ## Configuration
 
-Settings live in a `config.toml` file inside your platform's config directory:
+Settings live in a `config.toml` file in your platform's config directory, resolved
+with the [`directories`](https://crates.io/crates/directories) crate:
 
-Linux : `~/.config/muslimcli/config.toml` 
+| Platform | Location                                                 |
+| -------- | -------------------------------------------------------- |
+| Linux    | `~/.config/muslimcli/config.toml`                        |
+| macOS    | `~/Library/Application Support/muslimcli/config.toml`    |
+| Windows  | `%APPDATA%\medthedev\muslimcli\config\config.toml`       |
 
-The file is created automatically on first run and has this shape:
+The file is written when you run `setup` (or `reset`) and looks like this:
 
 ```toml
 [info]
-city = "Casablanca"
-country = "Morocco"
+city = "Algiers"
+country = "Algeria"
 ```
 
-You can edit it by hand or rerun `muslimcli setup`.
+You can edit it by hand, rerun `muslimcli setup`, or run `muslimcli reset` to start
+over.
 
 ## License
 
