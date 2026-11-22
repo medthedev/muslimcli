@@ -30,6 +30,16 @@ struct ApiResponse {
     data: Data,
 }
 
+#[derive(Deserialize, Debug)]
+struct DuaData {
+    arabic: String,
+}
+
+#[derive(Deserialize, Debug)]
+struct DuaResponse {
+    data: DuaData,
+}
+
 pub async fn get_data() -> Result<Timings, Box<dyn std::error::Error>> {
     let city = get_config_data("city".to_string())?;
     let country = get_config_data("country".to_string())?;
@@ -45,3 +55,14 @@ pub async fn get_data() -> Result<Timings, Box<dyn std::error::Error>> {
 
     Ok(result.data.timings)
 }
+
+pub async fn get_dua() -> Result<String, Box<dyn std::error::Error>> {
+    let url = "https://ummahapi.com/api/duas/random";
+
+    let response = reqwest::get(url).await?;
+
+    let result: DuaResponse = response.json().await?;
+
+    Ok(result.data.arabic)
+}
+

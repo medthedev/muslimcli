@@ -17,6 +17,7 @@ enum Action {
     Version,
     Setup,
     Reset,
+    Dua,
 }
 
 pub async fn check_args() -> Result<(), Box<dyn std::error::Error>> {
@@ -26,8 +27,9 @@ pub async fn check_args() -> Result<(), Box<dyn std::error::Error>> {
         Action::List => list().await?,
         Action::Help => help(),
         Action::Version => version(),
-        Action::Setup => setup(),
+        Action::Setup => setup()?,
         Action::Reset => reset()?,
+        Action::Dua => dua().await?,
     }
 
     Ok(())
@@ -41,6 +43,14 @@ async fn list() -> Result<(), Box<dyn std::error::Error>> {
     println!("Asr: {}", times.asr);
     println!("Maghrib: {}", times.maghrib);
     println!("Isha: {}", times.isha);
+
+    Ok(())
+}
+
+async fn dua() -> Result<(), Box<dyn std::error::Error>> {
+    let dua = api::get_dua().await?;
+
+    println!("{}", dua);
 
     Ok(())
 }
