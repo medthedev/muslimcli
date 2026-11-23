@@ -11,8 +11,6 @@ prayer times for your city and a random dua, right in the terminal.
   using the [AlAdhan prayer times API](https://aladhan.com/prayer-times-api).
 - **Random dua** — print a randomly chosen dua in Arabic from the
   [Ummah API](https://ummahapi.com/).
-- **Local configuration** — set your city and country once with `setup`, or clear them
-  with `reset`. No accounts or API keys required.
 
 ## Requirements
 

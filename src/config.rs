@@ -1,4 +1,3 @@
-
 use directories::ProjectDirs;
 use std::{fs, io, path::PathBuf};
 use toml_edit::{DocumentMut, Item, Table, value};
@@ -64,15 +63,10 @@ pub fn set_config(city: String, country: String) -> io::Result<()> {
         config["info"] = Item::Table(Table::new());
     }
 
-    config["info"]["city"] = Item::Value(
-        toml_edit::Value::from(city.trim())
-            .decorated(" ", "")
-    );
-    
-    config["info"]["country"] = Item::Value(
-        toml_edit::Value::from(country.trim())
-            .decorated(" ", "")
-    );
+    config["info"]["city"] = Item::Value(toml_edit::Value::from(city.trim()).decorated(" ", ""));
+
+    config["info"]["country"] =
+        Item::Value(toml_edit::Value::from(country.trim()).decorated(" ", ""));
 
     fs::write(&config_path, config.to_string())?;
 
@@ -88,12 +82,12 @@ pub fn get_config_data(option: String) -> io::Result<String> {
         .parse::<DocumentMut>()
         .map_err(|e| io::Error::new(io::ErrorKind::InvalidData, e))?;
 
-    let data = config["info"][&option]
-        .as_str()
-        .ok_or_else(|| io::Error::new(
+    let data = config["info"][&option].as_str().ok_or_else(|| {
+        io::Error::new(
             io::ErrorKind::NotFound,
-            format!("Config option '{}' not found", option)
-        ))?;
+            format!("Config option '{}' not found", option),
+        )
+    })?;
 
     Ok(data.to_string())
 }
