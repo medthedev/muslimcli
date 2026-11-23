@@ -25,7 +25,7 @@ fn default_config() -> String {
     config.to_string()
 }
 
-pub fn create_config() {
+pub fn create_config() -> io::Result<()> {
     let config_path = get_config_path()?;
 
     if !config_path.exists() {
@@ -34,6 +34,8 @@ pub fn create_config() {
     } else {
         println!("Config file already exists.");
     }
+
+    Ok(())
 }
 
 pub fn reset_config() -> io::Result<()> {

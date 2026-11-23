@@ -27,7 +27,7 @@ enum Action {
 pub async fn check_args() -> Result<(), Box<dyn std::error::Error>> {
     let args = Cli::parse();
 
-    create_config();
+    create_config()?;
 
     match args.action {
         Action::List => list().await?,
