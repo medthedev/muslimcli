@@ -1,6 +1,5 @@
 use crate::{
-    api,
-    config::{reset_config, set_config},
+    api, config::{create_config, reset_config, set_config},
 };
 use clap::Parser;
 use std::io;
@@ -27,6 +26,8 @@ enum Action {
 
 pub async fn check_args() -> Result<(), Box<dyn std::error::Error>> {
     let args = Cli::parse();
+
+    create_config();
 
     match args.action {
         Action::List => list().await?,
